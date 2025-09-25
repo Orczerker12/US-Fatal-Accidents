@@ -3,7 +3,7 @@
 -- 1. Number of accidents per year
 
 SELECT 
-count(PEDS) AS "Accidents"
+count(*) AS "Accidents"
 FROM accidents;
 
 
