@@ -1,0 +1,234 @@
+
+
+-- 1. Number of accidents per year
+
+SELECT 
+count(PEDS) AS "Accidents"
+FROM accidents;
+
+
+-- 2. Total fatalities per state
+
+SELECT
+STATENAME,
+sum(FATALS) AS "Fatalities"
+FROM accidents
+GROUP BY STATENAME
+ORDER BY Fatalities desc;
+
+
+-- 3. Accident frequency by month
+
+SELECT
+MONTHNAME AS "Month Name",
+count(*) AS "Accidents"
+FROM accidents
+GROUP BY MONTHNAME
+ORDER BY MONTH asc;
+
+
+-- 4. Which days of the week have the most accidents
+
+SELECT
+DAY_WEEKNAME AS "Day",
+COUNT(*) AS "Accidents"
+FROM accidents
+GROUP BY DAY_WEEKNAME
+ORDER BY DAY_WEEK asc;
+
+
+-- 5. Rural vs Urban
+
+SELECT
+RUR_URBNAME AS "City Geography",
+COUNT(*) AS "Number of Accidents",
+SUM(FATALS) AS "Fatalities"
+FROM accidents
+WHERE RUR_URBNAME IN ("Rural", "Urban")
+GROUP BY RUR_URBNAME;
+
+
+-- 6. Avg number of vehicles involved
+
+SELECT
+round(avg(VE_TOTAL),2) AS "Avg Num of Vehicles Involved"
+FROM accidents;
+
+
+-- 7. Number of accidents involving pedestrians
+
+SELECT 
+count(*) AS "Accidents Involving Peds"
+FROM accidents
+WHERE PEDS > 0;
+
+
+-- 8. Top 10 states with highest fatalities per accident
+
+SELECT
+STATENAME,
+round(avg(FATALS),3) AS "Avg Fatalities"
+FROM accidents
+GROUP BY STATENAME
+ORDER BY "Avg Fatalities" desc;
+
+
+-- 9. Number of Accidents (Day vs Night)
+
+SELECT
+LGT_CONDNAME AS "Light Condition",
+COUNT(LGT_CONDNAME) AS "Accidents"
+FROM accidents
+WHERE LGT_CONDNAME NOT IN ("Not Reported", "Other", "Reported as Unknown", "Dark - Unknown Lighting")
+GROUP BY LGT_CONDNAME
+ORDER BY "Accidents" desc;
+
+
+-- 10. Top 5 hours with highest number of accidents
+
+SELECT
+CAST(HOUR as TEXT) || ":00" AS "Hour",
+COUNT(HOUR) AS "Accidents"
+FROM accidents
+WHERE HOUR != 99
+GROUP BY HOUR
+ORDER BY "Accidents" desc
+LIMIT 5;
+
+-- 11. Identify if accidents involving buses are more fatal than others
+
+SELECT 
+SCH_BUSNAME,
+sum(FATALS) AS "Fatalities",
+round(avg(FATALS),2) as "Avg Fatalities"
+FROM accidents
+GROUP BY SCH_BUSNAME;
+
+
+-- 12. Do certain road types have higher fatality rates
+
+SELECT 
+FUNC_SYSNAME,
+round(avg(FATALS), 2) AS "Avg Fatalities"
+FROM accidents
+WHERE FUNC_SYSNAME NOT IN ("Trafficway Not in State Inventory", "Unknown", "Not Reported")
+GROUP BY FUNC_SYSNAME
+ORDER BY "Avg Fatalities";
+
+
+-- 13. Accidents by intersections
+
+SELECT 
+TYP_INTNAME AS "Intersection",
+sum(FATALS) AS "Fatalities",
+round(avg(FATALS), 2) AS "Avg Fatalities"
+FROM accidents
+WHERE TYP_INTNAME NOT IN ("Not Reported", "Reported as Unknown")
+GROUP BY TYP_INTNAME
+ORDER BY "Fatalities" desc;
+
+
+-- 14. Are accidents near junctions more dangerous?
+
+SELECT
+RELJCT1NAME AS "Junction",
+round(avg(VE_TOTAL), 2) AS "Avg Num of Vehicles",
+round(avg(FATALS), 2) AS "Avg Fatalities",
+sum(FATALS) AS "Fatalities"
+FROM accidents
+WHERE RELJCT1NAME NOT IN ("Reported as Unknown", "Not Reported")
+GROUP BY RELJCT1NAME;
+
+
+-- 15. Fatalities in weekdays vs weekends
+
+SELECT 
+CASE
+	WHEN DAY_WEEKNAME IN ("Saturday", "Sunday") THEN "Weekend"
+	ELSE "Workday"
+END AS "Weekday",
+sum(FATALS) AS "Total Fatalities",
+CASE
+	WHEN "Weekday" = "Weekend" THEN sum(FATALS) / 2
+	ELSE sum(FATALS) / 5
+END AS "Weighted Fatalities",
+round(avg(FATALS), 2) AS "Avg Fatalities",
+round(avg(PEDS), 2) AS "Avg Pedestrians"
+FROM accidents
+GROUP BY "Weekday"
+ORDER BY "Total Fatalities" DESC;
+
+
+-- 16. Find states where the fatalities increased/ decreased over the months
+
+
+SELECT
+STATENAME AS "State",
+Monthname AS "Month",
+sum(FATALS) AS "Fatalities",
+sum(PEDS) AS "Pedestrians",
+round(avg(FATALS), 2) AS "Avg Fatalities"
+FROM accidents a
+GROUP BY a.Statename, a.MONTHNAME
+ORDER BY a.STATENAME, a.MONTH;
+
+
+-- 17. Pedestrian fatality risk by state
+
+WITH CTE AS (
+SELECT
+STATENAME AS "State",
+COUNT(*) AS "Total Accidents",
+SUM(FATALS) AS "Total Fatalities",
+(SELECT COUNT(PEDS) FROM accidents a WHERE PEDS > 0 AND a.STATENAME = accidents.STATENAME) AS "Accidents Involving Pedestrians",
+(SELECT SUM(FATALS) FROM accidents a WHERE PEDS > 0 AND a.STATENAME = accidents.STATENAME) AS "Fatalities in Accidents Involving Peds"
+FROM accidents
+GROUP BY STATENAME)
+
+SELECT 
+"State",
+"Total Accidents",
+"Total Fatalities",
+ROUND(("Total Fatalities" - "Fatalities in Accidents Involving Peds") * 1.0 / ("Total Accidents" - "Accidents Involving Pedestrians"), 2) AS "Non-Pedestrian Accident Fatality Ratio",
+"Accidents Involving Pedestrians",
+"Fatalities in Accidents Involving Peds",
+ROUND("Fatalities in Accidents Involving Peds" * 1.0/ "Accidents Involving Pedestrians", 2) AS "Pedestrian Accident Fatality Ratio"
+FROM CTE;
+
+
+
+-- 18. Fatalities per 100k
+
+SELECT
+a.STATENAME AS "State",
+p."2023" AS "Population",
+SUM(a.FATALS) AS "Total Fatalities",
+ROUND((SUM(a.FATALS) * 1.0/ (replace(p."2023", ",", "") / 100000)), 2) AS "Fatalities Per 100k"
+FROM accidents a JOIN pop_2023 p ON a.STATENAME = p.Region
+GROUP BY a.STATENAME;
+
+-- 19. EMS response times by state
+
+WITH CTE AS (SELECT
+STATENAME AS "State",
+ROUND(AVG(((HOSP_HR * 60 + HOSP_MN) - (ARR_HOUR * 60 + ARR_MIN) + 1440) % 1440), 2) AS "EMS Arrival to hospital time",
+ROUND(AVG(((HOSP_HR * 60 + HOSP_MN) - (NOT_HOUR * 60 + NOT_MIN) + 1440) % 1440), 2) AS "Notification to hospital time"
+FROM accidents
+WHERE ARR_HOUR BETWEEN 0 AND 23
+AND ARR_MIN BETWEEN 0 AND 60
+AND HOSP_HR BETWEEN 0 AND 23
+AND HOSP_MN BETWEEN 0 AND 60
+AND NOT_HOUR BETWEEN 0 AND 23
+AND NOT_MIN BETWEEN 0 AND 60
+AND ARR_HOUR 
+AND ((HOSP_HR*60 + HOSP_MN) - (ARR_HOUR*60 + ARR_MIN)) >= 0
+AND ((HOSP_HR * 60 + HOSP_MN) - (NOT_HOUR * 60 + NOT_MIN)) >= 0
+GROUP BY STATENAME
+HAVING ROUND(AVG(((HOSP_HR * 60 + HOSP_MN) - (ARR_HOUR * 60 + ARR_MIN) + 1440) % 1440), 2) > 0
+AND ROUND(AVG(((HOSP_HR * 60 + HOSP_MN) - (NOT_HOUR * 60 + NOT_MIN) + 1440) % 1440), 2) > 0)
+	
+SELECT *,
+ROUND("Notification to hospital time" - "EMS Arrival to hospital time",2) AS "Notification to EMS Arrival"
+FROM CTE;
+
+
