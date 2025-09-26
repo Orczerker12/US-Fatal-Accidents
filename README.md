@@ -29,3 +29,17 @@ The project explores general accident statistics, fatality rates across states, 
 - **Comparative Insights**: Identified states, times, and conditions most associated with high fatality risk.
 
 
+# Example SQL Query
+
+Below, I compute the fatalities per 100,000 people by state. I do this by joining the dataset with US population census data, and dividing total fatalities by the state population over 100,000. Due to the presence of thousand separators in the population figures, the mathematical operation wouldn't work as intended, so I removed them using the replace function, yielding the correct result.
+
+SELECT\
+a.STATENAME AS "State",\
+p."2023" AS "Population",\
+SUM(a.FATALS) AS "Total Fatalities",\
+ROUND((SUM(a.FATALS) * 1.0/ (replace(p."2023", ",", "") / 100000)), 2) AS "Fatalities Per 100k"\
+FROM accidents a JOIN pop_2023 p ON a.STATENAME = p.Region\
+GROUP BY a.STATENAME;\
+
+
+
