@@ -33,13 +33,6 @@ The project explores general accident statistics, fatality rates across states, 
 
 Below, I compute the fatalities per 100,000 people by state. I do this by joining the dataset with US population census data, and dividing total fatalities by the state population over 100,000. Due to the presence of thousand separators in the population figures, the mathematical operation wouldn't work as intended, so I removed them using the replace function, yielding the correct result.
 
-SELECT\
-a.STATENAME AS "State",\
-p."2023" AS "Population",\
-SUM(a.FATALS) AS "Total Fatalities",\
-ROUND((SUM(a.FATALS) * 1.0/ (replace(p."2023", ",", "") / 100000)), 2) AS "Fatalities Per 100k"\
-FROM accidents a JOIN pop_2023 p ON a.STATENAME = p.Region\
-GROUP BY a.STATENAME;\
-
+<img width="678" height="132" alt="image" src="https://github.com/user-attachments/assets/a47a1da2-6cd8-4bbf-9c56-d1e022dcdae3" />
 
 
