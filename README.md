@@ -4,7 +4,7 @@
 
 Data analysis and visualisation project investigating US fatal accidents in 2023. 
 
-The project explores general accident statistics, fatality rates across states, and analyzes patterns in the data. Data cleaning is performed using Python. The Jupyter Notebook can be accessed here: [Pandas Data Cleaning](https://github.com/Orczerker12/US-Fatal-Accidents/blob/main/Pandas%20Code.ipynb). I use SQLite queries to extract the relevant data, and the code can be accessed here: [SQLite Queries](https://github.com/Orczerker12/US-Fatal-Accidents/blob/main/SQLite%20Queries). Finally, I use Power BI to visualise the most interesting and insightful findings.
+The project explores general accident statistics, fatality rates across states, and analyzes patterns in the data. I use SQLite queries to extract the relevant data, and the code can be accessed. Finally, I use Power BI to visualise the most interesting and insightful findings.
 
 
 # Dataset
@@ -16,7 +16,6 @@ The project explores general accident statistics, fatality rates across states, 
   - MONTHNAME, DAY_WEEKNAME, HOUR – Temporal variables
   - FATALS – Fatalities per accident
   - PEDS – Pedestrian involvement
-  - LGT_CONDNAME - Light condition
   - HOSP_HR, ARR_HOUR, NOT_HOUR – Emergency response timing
  
   # Data Analysis and Visualisation
