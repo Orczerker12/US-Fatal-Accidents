@@ -4,7 +4,7 @@
 
 Data analysis and visualisation project investigating US fatal accidents in 2023. 
 
-The project explores general accident statistics, fatality rates across states, and analyzes patterns in the data. I use SQLite queries to extract the relevant data, and the code can be accessed. Finally, I use Power BI to visualise the most interesting and insightful findings.
+The project explores general accident statistics, fatality rates across states, and analyzes patterns in the data. I use SQLite queries to extract the relevant data, and the code can be accessed here: . Finally, I use Power BI to visualise the most interesting and insightful findings.
 
 
 # Dataset
@@ -27,11 +27,5 @@ The project explores general accident statistics, fatality rates across states, 
 - **Response Times**: Average EMS arrival and notification delays analyzed using derived time fields.
 - **Comparative Insights**: Identified states, times, and conditions most associated with high fatality risk.
 
-
-# Example SQL Query
-
-Below, I compute the fatalities per 100,000 people by state. I do this by joining the dataset with US population census data, and dividing total fatalities by the state population over 100,000. Due to the presence of thousand separators in the population figures, the mathematical operation wouldn't work as intended, so I removed them using the replace function, yielding the correct result.
-
-<p align="center"> <img width="678" height="132" alt="image" src="https://github.com/user-attachments/assets/a47a1da2-6cd8-4bbf-9c56-d1e022dcdae3" /> </p>
 
 
