@@ -29,5 +29,6 @@ The project explores general accident statistics, fatality rates across states, 
 
 Below is the Power BI dashboard. The file can be accessed here: 
 
-<img width="1469" height="819" alt="Fatal Accidents Power BI" src="https://github.com/user-attachments/assets/4c7cb2ce-2f47-4a8f-a6da-b2d48c3a972b" />
+<img width="1469" height="819" alt="Fatal Accidents Power BI" src="https://github.com/user-attachments/assets/3c143247-8955-45c9-99b1-b195e8fa7f15" />
+
 
