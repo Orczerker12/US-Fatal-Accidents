@@ -8,7 +8,7 @@ The project explores general accident statistics, fatality rates across states, 
 
 
 # Dataset
-- Source: National Highway Traffic Safety Administration
+- Source: National Highway Traffic Safety Administration (Available here: https://www.nhtsa.gov/file-downloads?p=nhtsa/downloads/FARS/2023/National/)
 - Dataset Size: 37,000+ Rows and 80 Columns
 - Year: 2023
 - Key Columns:
