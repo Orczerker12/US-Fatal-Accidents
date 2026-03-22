@@ -27,7 +27,7 @@ The project explores general accident statistics, fatality rates across states, 
 - **Response Times**: Average EMS arrival and notification delays analyzed using derived time fields.
 - **Comparative Insights**: Identified states, times, and conditions most associated with high fatality risk.
 
-Below is the Power BI dashboard. The file can be accessed here <h> https://app.powerbi.com/groups/me/reports/e91b886c-9502-491d-a0a9-9af705295859?experience=power-bi </h>
+Below is the Power BI dashboard. The file can be accessed here: <h> https://app.powerbi.com/groups/me/reports/e91b886c-9502-491d-a0a9-9af705295859?experience=power-bi </h>
 
 <img width="1469" height="819" alt="Fatal Accidents Power BI" src="https://github.com/user-attachments/assets/3c143247-8955-45c9-99b1-b195e8fa7f15" />
 
